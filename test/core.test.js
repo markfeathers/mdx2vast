@@ -17,10 +17,11 @@ describe('Default Behavior (No Framework Import)', () => {
   });
 
   test('single line JSX text element wraps in code', () => {
-    const mdx = `<CustomComponent>content</CustomComponent>`;
+    const mdx = `Before <CustomComponent>content</CustomComponent> after.`;
     const output = toValeAST(mdx);
-    expect(output).toContain('<code class="mdxNode');
+    expect(output).toContain('<p>Before <code class="mdxNode mdxJsxTextElement">');
     expect(output).toContain('&#x3C;CustomComponent>');
+    expect(output).not.toContain('<pre>');
   });
 
   test('self-closing flow JSX wraps in pre/code', () => {
