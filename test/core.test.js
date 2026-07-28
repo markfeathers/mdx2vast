@@ -16,22 +16,22 @@ describe('Default Behavior (No Framework Import)', () => {
     expect(output).toContain('&#x3C;SomeComponent');
   });
 
-  test('single line JSX wraps in code', () => {
+  test('single line JSX text element wraps in code', () => {
     const mdx = `<CustomComponent>content</CustomComponent>`;
     const output = toValeAST(mdx);
     expect(output).toContain('<code class="mdxNode');
     expect(output).toContain('&#x3C;CustomComponent>');
   });
 
-  test('self-closing JSX wraps in code', () => {
+  test('self-closing flow JSX wraps in pre/code', () => {
     const output = toValeAST('<Icon name="star" />');
-    expect(output).toContain('<code class="mdxNode');
+    expect(output).toContain('<pre><code class="mdxNode');
     expect(output).toContain('&#x3C;Icon');
   });
 
-  test('empty JSX element wraps in code', () => {
+  test('empty flow JSX element wraps in pre/code', () => {
     const output = toValeAST('<Card></Card>');
-    expect(output).toContain('<code class="mdxNode');
+    expect(output).toContain('<pre><code class="mdxNode');
     expect(output).toContain('&#x3C;Card');
   });
 
@@ -48,17 +48,17 @@ describe('Default Behavior (No Framework Import)', () => {
 // =============================================================================
 
 describe('ESM and Expressions', () => {
-  test('single-line import wraps in code', () => {
+  test('single-line import wraps in pre/code', () => {
     const mdx = `import { Card } from '@mintlify/components';`;
     const output = toValeAST(mdx);
-    expect(output).toContain('<code class="mdxNode mdxjsEsm">');
+    expect(output).toContain('<pre><code class="mdxNode mdxjsEsm">');
     expect(output).toContain('import');
   });
 
-  test('single-line export wraps in code', () => {
+  test('single-line export wraps in pre/code', () => {
     const mdx = `export const meta = { title: "Test" };`;
     const output = toValeAST(mdx);
-    expect(output).toContain('<code class="mdxNode mdxjsEsm">');
+    expect(output).toContain('<pre><code class="mdxNode mdxjsEsm">');
   });
 
   test('multiline export wraps in pre/code', () => {
@@ -88,6 +88,11 @@ describe('ESM and Expressions', () => {
   someExpression
 }`;
     const output = toValeAST(mdx);
+    expect(output).toContain('<pre><code class="mdxNode mdxFlowExpression">');
+  });
+
+  test('single-line flow expression wraps in pre/code', () => {
+    const output = toValeAST(`{someExpression}`);
     expect(output).toContain('<pre><code class="mdxNode mdxFlowExpression">');
   });
 });

@@ -17,6 +17,12 @@ const mdxNodes = [
   "mdxTextExpression",
 ];
 
+const flowNodes = new Set([
+  "mdxjsEsm",
+  "mdxFlowExpression",
+  "mdxJsxFlowElement",
+]);
+
 /**
  * Framework configurations for prose component detection.
  * Key order determines auto-detection priority: Starlight > Fern > Mintlify
@@ -85,7 +91,7 @@ const createCustomHandler = (doc) => (state, node, parent) => {
 
   if (mdxNodes.includes(node.type)) {
     const className = `mdxNode ${node.type}`;
-    return source.includes("\n")
+    return source.includes("\n") || flowNodes.has(node.type)
       ? h("pre", h("code", { className }, source))
       : h("code", { className }, source);
   }
@@ -112,7 +118,7 @@ const createJsxHandler = (doc) => {
       return h("div", { className, "data-component": name }, state.all(node));
     }
 
-    return source.includes("\n")
+    return source.includes("\n") || flowNodes.has(node.type)
       ? h("pre", h("code", { className }, source))
       : h("code", { className }, source);
   };
